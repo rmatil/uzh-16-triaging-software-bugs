@@ -21,7 +21,7 @@ class CsvCleaner(object):
         """
 
         if not path.isfile(source):
-            raise "The given source path %s does not exits" % source
+            raise Exception("The given source path %s does not exits" % source)
 
         # note, that the target file is cleared if already existing
         reader = csv.reader(open(source, "rb"))

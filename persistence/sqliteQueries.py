@@ -70,6 +70,14 @@ CREATE_RESOLUTION = ('CREATE TABLE Resolution('
                      'FOREIGN KEY (id) REFERENCES Reports(id))'
                      )
 
+CREATE_SEVERITY = ('CREATE TABLE Severity('
+                     'id INTEGER NOT NULL,'
+                     'what TEXT,'
+                     'timestamp INTEGER NOT NULL,'
+                     'who INTEGER NOT NULL,'
+                     'FOREIGN KEY (id) REFERENCES Reports(id))'
+                     )
+
 CREATE_SHORT_DESCRIPTION = ('CREATE TABLE ShortDesc('
                             'id INTEGER NOT NULL,'
                             'what TEXT,'

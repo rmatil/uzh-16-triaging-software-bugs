@@ -24,6 +24,10 @@ class SqLitePersister(object):
         """Creates the database if not already existing"""
         self.connection = sqlite3.connect(self.db_name)
 
+    def connect_db(self):
+        """Connects to the database or creates if not existing"""
+        self.connection = sqlite3.connect(self.db_name)
+
     def setup_db_scheme(self):
         """Creates the database schema"""
         if self.connection is None:
@@ -41,6 +45,10 @@ class SqLitePersister(object):
         self.connection.execute(sqliteQueries.CREATE_SEVERITY)
         self.connection.execute(sqliteQueries.CREATE_SHORT_DESCRIPTION)
         self.connection.execute(sqliteQueries.CREATE_VERSION)
+
+        self.connection.execute(sqliteQueries.CREATE_TRAINING_SET)
+        self.connection.execute(sqliteQueries.CREATE_VALIDATION_SET)
+        self.connection.execute(sqliteQueries.CREATE_TEST_SET)
 
     def import_main_data(self, source, table):
         """
@@ -64,7 +72,7 @@ class SqLitePersister(object):
                     dict_reader]
 
         self.connection.executemany(
-            "INSERT INTO %s (id, current_resolution, current_status, opening, reporter) VALUES (?, ?, ?, ?, ?);" % table,
+            "INSERT INTO %s (bug_id, current_resolution, current_status, opening, reporter) VALUES (?, ?, ?, ?, ?);" % table,
             rows)
         self.connection.commit()
 
@@ -92,6 +100,6 @@ class SqLitePersister(object):
             rows = re.findall("([0-9]+),((?:.|(?:\n\t)+)*),([0-9]+),([0-9]+)", content)
 
         self.connection.executemany(
-            "INSERT INTO %s (id, what, timestamp, who) VALUES (?, ?, ?, ?);" % table,
+            "INSERT INTO %s (bug_id, what, timestamp, who) VALUES (?, ?, ?, ?);" % table,
             rows)
         self.connection.commit()

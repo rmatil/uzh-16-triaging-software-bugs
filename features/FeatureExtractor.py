@@ -42,3 +42,10 @@ OPEN_TIME = ('SELECT reports.bug_id, minmax.min, minmax.max, (minmax.max - minma
              ') AS minmax INNER JOIN reports ON minmax.bug_id = reports.bug_id'
              'WHERE reports.current_status IN ("CLOSED")'
              )
+
+# 7. Software module to which bug was assigned to
+SOFTWARE_MODULE = ('SELECT reports.bug_id, components.what FROM components'
+                   'INNER JOIN reports ON components.bug_id = reports.bug_id'
+                   'WHERE reports.current_status = "CLOSED"'
+                   'ORDER BY reports.bug_id'
+                   )

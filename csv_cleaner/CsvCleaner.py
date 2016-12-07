@@ -35,13 +35,14 @@ class CsvCleaner(object):
             # assume, the "what" field has multiple addresses in it
             if length_row > 4:
                 for x in xrange(2, 2 + length_row - 4):
-                    str = str + ';' + row[x].strip()
+                    str = str + ',' + row[x].strip()
 
                 row[1] = str
                 row[2] = row[2 + length_row - 4]
                 row[3] = row[3 + length_row - 4]
 
-                del row[4 - length_row]
+                for x in xrange(0,length_row-4):
+                    del row[-1]
 
             # write (cleaned) row
             writer.writerow(row)

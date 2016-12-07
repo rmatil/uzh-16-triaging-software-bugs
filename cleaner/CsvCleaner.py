@@ -23,8 +23,8 @@ class CsvCleaner(object):
             raise Exception("The given source path %s does not exits" % source)
 
         # note, that the target file is cleared if already existing
-        reader = csv.reader(open(source, "rb"))
-        writer = csv.writer(open(target, "wb"))
+        reader = csv.reader(open(source, "r", encoding='utf-8'))
+        writer = csv.writer(open(target, "w", encoding='utf-8'))
 
         for row in reader:
             length_row = len(row)

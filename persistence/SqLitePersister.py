@@ -1,6 +1,8 @@
-import sqlite3
-import sqliteQueries
 import csv
+import re
+import sqlite3
+
+from persistence import sqliteQueries
 
 
 class SqLitePersister(object):
@@ -55,7 +57,7 @@ class SqLitePersister(object):
         if self.connection is None:
             raise Exception("Open database connection first")
 
-        with open(source, 'rb') as source_csv_file:
+        with open(source, 'r') as source_csv_file:
             # assumes a header in the csv file
             dict_reader = csv.DictReader(source_csv_file)
             rows = [(i['id'], i['current_resolution'], i['current_status'], i['opening'], i['reporter']) for i in
@@ -81,10 +83,13 @@ class SqLitePersister(object):
         if self.connection is None:
             raise Exception("Open database connection first")
 
-        with open(source, 'rb') as source_csv_file:
-            # assumes with a header in the csv file
-            dict_reader = csv.DictReader(source_csv_file)
-            rows = [(i['id'], i['what'], i['timestamp'], i['who']) for i in dict_reader]
+        with open(source, 'r', encoding='utf-8') as source_csv_file:
+            content = source_csv_file.read()
+            source_csv_file.close()
+            # this regex looks for 4-tuples in this bloody text (which is completely insane to be in CSV),
+            # amongst multiple lines if required.
+            # 4 groups will be captured: id, what, timestamp, who.
+            rows = re.findall("([0-9]+),((?:.|(?:\n\t)+)*),([0-9]+),([0-9]+)", content)
 
         self.connection.executemany(
             "INSERT INTO %s (id, what, timestamp, who) VALUES (?, ?, ?, ?);" % table,

@@ -1,1 +1,0 @@
-from SqLitePersister import SqLitePersister

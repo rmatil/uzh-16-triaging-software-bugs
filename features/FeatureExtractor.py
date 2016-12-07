@@ -1,5 +1,28 @@
+# 1. success-rate
+SUCCESSRATE = ('SELECT success.who, success.count*1.0 / (success.count+ fail.count)'
+               'FROM (  SELECT assigned_to.who, count(assigned_to.who) AS count'
+               'FROM reports'
+               'JOIN assigned_to ON reports.bug_id = assigned_to.bug_id'
+               'WHERE current_status == "RESOLVED" AND reports.current_resolution == "WORKSFORME" OR'
+               'current_status == "RESOLVED" AND reports.current_resolution == "FIXED" OR'
+               'current_status == "VERIVIED" AND reports.current_resolution == "FIXED" OR'
+               'current_status == "CLOSED" AND reports.current_resolution == "WORKSFORME" OR'
+               'current_status == "CLOSED" AND reports.current_resolution == "FIXED"'
+               'GROUP BY assigned_to.who) AS success'
+               'JOIN ('
+               'SELECT assigned_to.who, count(assigned_to.who) AS count from reports'
+               'JOIN assigned_to ON reports.bug_id = assigned_to.bug_id'
+               'WHERE current_status == "RESOLVED" AND reports.current_resolution == "WONTFIX" OR'
+               'current_status == "RESOLVED" AND reports.current_resolution == "INVALID" OR'
+               'current_status == "CLOSED" AND reports.current_resolution == "WONTFIX" OR'
+               'current_status == "CLOSED" AND reports.current_resolution == "INVALID" OR'
+               'current_status == "VERIFIED" AND reports.current_resolution == "WONTFIX" OR'
+               'current_status == "VERIFIED" AND reports.current_resolution == "INVALID"'
+               'GROUP BY assigned_to.who) AS fail'
+               'ON success.who = fail.who;'
+               )
 
-# Number of reopenings per bug
+# 5. Number of reopenings per bug
 REOPENINGS = ('SELECT bug_status.bug_id, bug_status.timestamp, COUNT(bug_status.id) AS count'
               'FROM bug_status'
               'WHERE bug_status.what = "REOPENED"'

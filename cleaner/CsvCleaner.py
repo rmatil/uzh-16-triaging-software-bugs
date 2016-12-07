@@ -5,7 +5,6 @@ import os.path as path
 class CsvCleaner(object):
     """Cleans misformatted csv files and rewrites them"""
 
-    @staticmethod
     def clean_cc(source, target):
         """
             Cleans the misformatted CC csv file at the given source location and
@@ -34,14 +33,14 @@ class CsvCleaner(object):
             # each row should have exactly 4 fields, otherwise we
             # assume, the "what" field has multiple addresses in it
             if length_row > 4:
-                for x in xrange(2, 2 + length_row - 4):
+                for x in range(2, 2 + length_row - 4):
                     str = str + ',' + row[x].strip()
 
                 row[1] = str
                 row[2] = row[2 + length_row - 4]
                 row[3] = row[3 + length_row - 4]
 
-                for x in xrange(0,length_row-4):
+                for x in range(0,length_row-4):
                     del row[-1]
 
             # write (cleaned) row

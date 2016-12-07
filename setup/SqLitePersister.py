@@ -2,7 +2,7 @@ import csv
 import re
 import sqlite3
 
-from persistence import sqliteQueries
+from setup import sqliteQueries
 
 
 class SqLitePersister(object):

@@ -1,7 +1,8 @@
 import os.path as path
-from cleaner import CsvCleaner
-from persistence import SqLitePersister
-from persistence import Sampler
+
+from setup import Cleaner
+from setup import Sampler
+from setup import SqLitePersister
 
 cc_source = "resources/eclipse/cc.csv"
 cc_target = "resources/eclipse/cc_cleaned.csv"
@@ -14,16 +15,23 @@ database = path.abspath(database)
 
 # only create the cleaned CC csv if not existing yet
 if not path.isfile(cc_target):
-    CsvCleaner.CsvCleaner.clean_cc(cc_source, cc_target)
+    print("Cleaning cc.csv... ")
+    Cleaner.CsvCleaner.clean_cc(cc_source, cc_target)
+    print("Done \n")
 
 # create database if not yet existing
 persister = SqLitePersister.SqLitePersister(database)
 
 if not path.isfile(database):
+    print("Creating database at %s... " % database)
     persister.create_db()
+    print("Done. \n")
+    print("Setting up DB schema... ")
     persister.setup_db_scheme()
+    print("Done. \n")
 
     # persist this bloody csv data
+    print("Importing data... ")
     persister.import_main_data(path.abspath("resources/eclipse/reports.csv"), 'reports')
     persister.import_additional_data(path.abspath("resources/eclipse/assigned_to.csv"), "assigned_to")
     persister.import_additional_data(path.abspath("resources/eclipse/bug_status.csv"), "bug_status")
@@ -36,9 +44,13 @@ if not path.isfile(database):
     persister.import_additional_data(path.abspath("resources/eclipse/severity.csv"), "severity")
     persister.import_additional_data(path.abspath("resources/eclipse/short_desc.csv"), "short_desc")
     persister.import_additional_data(path.abspath("resources/eclipse/version.csv"), "version")
+    print("Done. \n")
 else:
+    print("Connecting to database at %s... " % database)
     persister.connect_db()
+    print("Done. \n")
 
-
-sampler = Sampler.Sampler(database, 'reports', 'training_set', 'validation_set', 'test_set')
+sampler = Sampler.DbSampler(database, 'reports', 'training_set', 'validation_set', 'test_set')
+print("Sampling entire data into 50% training, 25% validation and 25% testing data... ")
 sampler.sample()
+print("Done. \n")

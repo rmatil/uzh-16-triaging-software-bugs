@@ -3,7 +3,7 @@ import math
 import numpy
 
 
-class Sampler(object):
+class DbSampler(object):
     def __init__(self, db, source_table, training_table, validation_table, test_table):
         self.db = db
         self.source_table = source_table

@@ -22,6 +22,42 @@ SUCCESSRATE = ('SELECT success.who, success.count*1.0 / (success.count+ fail.cou
                'ON success.who = FAIL.who;'
                )
 
+# 2. reputation-rate
+
+REPUTATIONRATE = ('SELECT reporter, nr_closed, nr_failed, (nr_closed*1.0/(nr_closed+nr_failed)) AS reputationRate'
+                  'FROM ('
+                  'SELECT reputation.reporter, ifnull(nr_closed, 0) AS nr_closed, ifnull(nr_failed, 0) AS nr_failed'
+                  'FROM('
+                  'SELECT *'
+                  'FROM ('
+                  'SELECT reporter, count(reporter) AS nr_closed'
+                  'FROM reports'
+                  'WHERE current_status== "CLOSED"'
+                  'GROUP BY reporter'
+                  ') AS closed'
+                  'LEFT OUTER JOIN ('
+                  'SELECT reporter, count(reporter) AS nr_failed'
+                  'FROM reports'
+                  'WHERE current_status == "CLOSED" AND current_resolution == "WONTFIX" OR'
+                  'current_status == "CLOSED" AND current_resolution == "INVALID"'
+                  'GROUP BY reporter) AS failed ON failed.reporter=closed.reporter'
+                  'UNION ALL'
+                  'SELECT *'
+                  'FROM ('
+                  'SELECT reporter, count(reporter) AS nr_failed'
+                  'FROM reports'
+                  'WHERE current_status == "CLOSED" AND current_resolution == "WONTFIX" OR'
+                  'current_status == "CLOSED" AND current_resolution == "INVALID"'
+                  'GROUP BY reporter) AS failed''
+                  'LEFT OUTER JOIN ('
+                  'SELECT reporter, count(reporter) AS nr_closed'
+                  'FROM reports'
+                  'WHERE current_status== "CLOSED"'
+                  'GROUP BY reporter''
+                  ') AS closed ON failed.reporter=closed.reporter) AS reputation) as repRate;
+)
+
+
 # 5. Number of reopenings per bug
 REOPENINGS = ('SELECT bug_status.bug_id, bug_status.timestamp, COUNT(bug_status.id) AS count'
               'FROM bug_status'

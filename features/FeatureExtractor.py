@@ -80,8 +80,40 @@ REPORTERASSIGNEERATE = ('SELECT success.who, success.reporter, success.count*1.0
                         'current_status == "VERIFIED" AND reports.current_resolution == "INVALID"'
                         'GROUP BY assigned_to.who) AS fail'
                         'ON success.who = FAIL.who AND success.reporter=FAIL.reporter;'
-
                         )
+
+# 4.  What impact do bug reassignments have on the likelihood of a bug being fixed?
+# list with nr of bugs which were successful and assignments for each reassingments
+REASSINGMENTS = ('SELECT s1.nr_assignments, s1.nrSuccessReassignments, f1.nrFailedReasignments'
+                 'FROM (SELECT success.nr_assignments, count(success.nr_assignments) AS nrSuccessReassignments'
+                 'FROM (SELECT reports.bug_id, a1.nr_assignments'
+                 'FROM reports'
+                 'JOIN (SELECT bug_id, count(bug_id) AS nr_assignments'
+                 'FROM assigned_to'
+                 'GROUP BY bug_id) a1 ON reports.bug_id = a1.bug_id'
+                 'WHERE current_status == "RESOLVED" AND reports.current_resolution == "WORKSFORME" OR'
+                 'current_status == "RESOLVED" AND reports.current_resolution == "FIXED" OR'
+                 'current_status == "VERIVIED" AND reports.current_resolution == "FIXED" OR'
+                 'current_status == "CLOSED" AND reports.current_resolution == "WORKSFORME" OR'
+                 'current_status == "CLOSED" AND reports.current_resolution == "FIXED"'
+                 ') AS success'
+                 'GROUP BY success.nr_assignments) AS s1'
+                 'JOIN ('
+                 'SELECT fail.nr_assignments, count(fail.nr_assignments) AS nrFailedReasignments'
+                 'FROM (SELECT reports.bug_id, a2.nr_assignments'
+                 'FROM reports'
+                 'JOIN (SELECT bug_id, count(bug_id) AS nr_assignments'
+                 'FROM assigned_to'
+                 'GROUP BY bug_id) a2 ON reports.bug_id = a2.bug_id'
+                 'WHERE current_status == "RESOLVED" AND reports.current_resolution == "WONTFIX" OR'
+                 'current_status == "RESOLVED" AND reports.current_resolution == "INVALID" OR'
+                 'current_status == "CLOSED" AND reports.current_resolution == "WONTFIX" OR'
+                 'current_status == "CLOSED" AND reports.current_resolution == "INVALID" OR'
+                 'current_status == "VERIFIED" AND reports.current_resolution == "WONTFIX" OR'
+                 'current_status == "VERIFIED" AND reports.current_resolution == "INVALID"'
+                 ') AS fail'
+                 'GROUP BY fail.nr_assignments) f1 ON s1.nr_assignments=f1.nr_assignments;'
+                 )
 
 # 5. Number of reopenings per bug
 REOPENINGS = ('SELECT bug_status.bug_id, bug_status.timestamp, COUNT(bug_status.id) AS count'

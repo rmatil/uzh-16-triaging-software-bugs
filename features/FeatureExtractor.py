@@ -55,8 +55,33 @@ REPUTATIONRATE = ('SELECT reporter, nr_closed, nr_failed, (nr_closed*1.0/(nr_clo
                   'WHERE current_status== "CLOSED"'
                   'GROUP BY reporter''
                   ') AS closed ON failed.reporter=closed.reporter) AS reputation) as repRate;
-)
+                  )
+# 3. ratio between success and reporter-assignee pair
+# ratio of success of a bug report for every reporter-assignee pair
 
+REPORTERASSIGNEERATE = ('SELECT success.who, success.reporter, success.count*1.0 / (success.count+ fail.count)'
+                        'FROM (SELECT assigned_to.who, reports.reporter, count(assigned_to.who) AS count'
+                        'FROM reports'
+                        'JOIN assigned_to ON reports.id = assigned_to.id'
+                        'WHERE current_status == "RESOLVED" AND reports.current_resolution == "WORKSFORME" OR'
+                        'current_status == "RESOLVED" AND reports.current_resolution == "FIXED" OR'
+                        'current_status == "VERIVIED" AND reports.current_resolution == "FIXED" OR'
+                        'current_status == "CLOSED" AND reports.current_resolution == "WORKSFORME" OR'
+                        'current_status == "CLOSED" AND reports.current_resolution == "FIXED"'
+                        'GROUP BY assigned_to.who, reports.reporter) AS success'
+                        'JOIN ('
+                        'SELECT assigned_to.who, reports.reporter, count(assigned_to.who) AS count FROM reports'
+                        'JOIN assigned_to ON reports.id = assigned_to.id'
+                        'WHERE current_status == "RESOLVED" AND reports.current_resolution == "WONTFIX" OR'
+                        'current_status == "RESOLVED" AND reports.current_resolution == "INVALID" OR'
+                        'current_status == "CLOSED" AND reports.current_resolution == "WONTFIX" OR'
+                        'current_status == "CLOSED" AND reports.current_resolution == "INVALID" OR'
+                        'current_status == "VERIFIED" AND reports.current_resolution == "WONTFIX" OR'
+                        'current_status == "VERIFIED" AND reports.current_resolution == "INVALID"'
+                        'GROUP BY assigned_to.who) AS fail'
+                        'ON success.who = FAIL.who AND success.reporter=FAIL.reporter;'
+
+                        )
 
 # 5. Number of reopenings per bug
 REOPENINGS = ('SELECT bug_status.bug_id, bug_status.timestamp, COUNT(bug_status.id) AS count'

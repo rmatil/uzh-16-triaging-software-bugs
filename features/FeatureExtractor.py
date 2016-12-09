@@ -84,7 +84,7 @@ REPORTERASSIGNEERATE = ('SELECT success.who, success.reporter, success.count*1.0
 
 # 4.  What impact do bug reassignments have on the likelihood of a bug being fixed?
 # list with nr of bugs which were successful and assignments for each reassingments
-REASSINGMENTS = ('SELECT s1.nr_assignments, s1.nrSuccessReassignments, f1.nrFailedReasignments'
+REASSINGMENTS = ('SELECT s1.nr_assignments, s1.nrSuccessReassignments, f1.nrFailedReasignments, (s1.nrSuccessReassignments*1.0/(s1.nrSuccessReassignments+f1.nrFailedReasignments)) AS bugSuccessRate'
                  'FROM (SELECT success.nr_assignments, count(success.nr_assignments) AS nrSuccessReassignments'
                  'FROM (SELECT reports.bug_id, a1.nr_assignments'
                  'FROM reports'

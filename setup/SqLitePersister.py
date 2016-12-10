@@ -50,6 +50,8 @@ class SqLitePersister(object):
         self.connection.execute(sqliteQueries.CREATE_VALIDATION_SET)
         self.connection.execute(sqliteQueries.CREATE_TEST_SET)
 
+        self.connection.execute(sqliteQueries.CREATE_FEATURES)
+
     def import_main_data(self, source, table):
         """
             Import the csv data at the given path into the given table name.

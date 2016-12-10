@@ -1,11 +1,11 @@
 import csv
 import re
-import sqlite3
 
+from setup import SqLiteConnector
 from setup import sqliteQueries
 
 
-class SqLitePersister(object):
+class SqLitePersister(SqLiteConnector.SqLiteConnector):
     """
         Handles common functionalities in order to setup the
         database for later working on the dataset
@@ -17,40 +17,31 @@ class SqLitePersister(object):
     """
 
     def __init__(self, db_name):
-        self.db_name = db_name
-        self.connection = None  # type: sqlite3.Connection
-
-    def create_db(self):
-        """Creates the database if not already existing"""
-        self.connection = sqlite3.connect(self.db_name)
-
-    def connect_db(self):
-        """Connects to the database or creates if not existing"""
-        self.connection = sqlite3.connect(self.db_name)
+        super().__init__(db_name)
 
     def setup_db_scheme(self):
         """Creates the database schema"""
-        if self.connection is None:
+        if self._connection is None:
             raise Exception("Open database connection first")
 
-        self.connection.execute(sqliteQueries.CREATE_ASSIGNED_TO)
-        self.connection.execute(sqliteQueries.CREATE_BUG_STATUS)
-        self.connection.execute(sqliteQueries.CREATE_CC)
-        self.connection.execute(sqliteQueries.CREATE_COMPONENTS)
-        self.connection.execute(sqliteQueries.CREATE_OPERATION_SYSTEM)
-        self.connection.execute(sqliteQueries.CREATE_PRIORITY)
-        self.connection.execute(sqliteQueries.CREATE_PRODUCT)
-        self.connection.execute(sqliteQueries.CREATE_REPORTS)
-        self.connection.execute(sqliteQueries.CREATE_RESOLUTION)
-        self.connection.execute(sqliteQueries.CREATE_SEVERITY)
-        self.connection.execute(sqliteQueries.CREATE_SHORT_DESCRIPTION)
-        self.connection.execute(sqliteQueries.CREATE_VERSION)
+        self._connection.execute(sqliteQueries.CREATE_ASSIGNED_TO)
+        self._connection.execute(sqliteQueries.CREATE_BUG_STATUS)
+        self._connection.execute(sqliteQueries.CREATE_CC)
+        self._connection.execute(sqliteQueries.CREATE_COMPONENTS)
+        self._connection.execute(sqliteQueries.CREATE_OPERATION_SYSTEM)
+        self._connection.execute(sqliteQueries.CREATE_PRIORITY)
+        self._connection.execute(sqliteQueries.CREATE_PRODUCT)
+        self._connection.execute(sqliteQueries.CREATE_REPORTS)
+        self._connection.execute(sqliteQueries.CREATE_RESOLUTION)
+        self._connection.execute(sqliteQueries.CREATE_SEVERITY)
+        self._connection.execute(sqliteQueries.CREATE_SHORT_DESCRIPTION)
+        self._connection.execute(sqliteQueries.CREATE_VERSION)
 
-        self.connection.execute(sqliteQueries.CREATE_TRAINING_SET)
-        self.connection.execute(sqliteQueries.CREATE_VALIDATION_SET)
-        self.connection.execute(sqliteQueries.CREATE_TEST_SET)
+        self._connection.execute(sqliteQueries.CREATE_TRAINING_SET)
+        self._connection.execute(sqliteQueries.CREATE_VALIDATION_SET)
+        self._connection.execute(sqliteQueries.CREATE_TEST_SET)
 
-        self.connection.execute(sqliteQueries.CREATE_FEATURES)
+        self._connection.execute(sqliteQueries.CREATE_FEATURES)
 
     def import_main_data(self, source, table):
         """
@@ -64,7 +55,7 @@ class SqLitePersister(object):
             table: str
                     The table name to which the data should be added. Note, that keys and table columns have to match
         """
-        if self.connection is None:
+        if self._connection is None:
             raise Exception("Open database connection first")
 
         with open(source, 'r') as source_csv_file:
@@ -73,10 +64,10 @@ class SqLitePersister(object):
             rows = [(i['id'], i['current_resolution'], i['current_status'], i['opening'], i['reporter']) for i in
                     dict_reader]
 
-        self.connection.executemany(
+        self._connection.executemany(
             "INSERT INTO %s (bug_id, current_resolution, current_status, opening, reporter) VALUES (?, ?, ?, ?, ?);" % table,
             rows)
-        self.connection.commit()
+        self._connection.commit()
 
     def import_additional_data(self, source, table):
         """
@@ -90,7 +81,7 @@ class SqLitePersister(object):
             table: str
                     The table name to which the data should be added. Note, that keys and table columns have to match
         """
-        if self.connection is None:
+        if self._connection is None:
             raise Exception("Open database connection first")
 
         with open(source, 'r', encoding='utf-8') as source_csv_file:
@@ -101,7 +92,7 @@ class SqLitePersister(object):
             # 4 groups will be captured: id, what, timestamp, who.
             rows = re.findall("([0-9]+),((?:.|(?:\n\t)+)*),([0-9]+),([0-9]+)", content)
 
-        self.connection.executemany(
+        self._connection.executemany(
             "INSERT INTO %s (bug_id, what, timestamp, who) VALUES (?, ?, ?, ?);" % table,
             rows)
-        self.connection.commit()
+        self._connection.commit()

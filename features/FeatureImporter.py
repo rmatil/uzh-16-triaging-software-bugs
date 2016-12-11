@@ -17,16 +17,16 @@ class FeatureImporter(SqLiteConnector.SqLiteConnector):
 
     def generate_empty_entries(self, table):
         """Insert empty rows for all bugs"""
-        rows = self._fetch_many("SELECT DISTINCT bug_id FROM reports")
+        rows = self._fetch_many("SELECT DISTINCT bug_id FROM reports ORDER BY bug_id")
         self._insert_many("INSERT INTO %s (bug_id) VALUES (?)" % table, rows)
 
     def generate_and_import_feature_1(self, table):
         rows = self._fetch_many(featureQueries.SUCCESS_RATE)
-        self._insert_many('INSERT INTO %s (bug_id, feature_1) VALUES (?, ?)' % table, rows)
+        self._insert_many('UPDATE %s SET feature_1 = ? WHERE bug_id = ?' % table, rows)
 
     def generate_and_import_feature_2(self, table):
         rows = self._fetch_many(featureQueries.REPUTATION_RATE)
-        self._insert_many('INSERT INTO %s (bug_id, feature_2) VALUES (?, ?)' % table, rows)
+        self._insert_many('UPDATE %s SET feature_2 = ? WHERE bug_id = ?' % table, rows)
 
     def _fetch_many(self, query):
         if self._connection is None:

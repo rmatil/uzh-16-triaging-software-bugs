@@ -300,19 +300,7 @@ REOPENINGS = ('SELECT bug_status.bug_id, bug_status.timestamp, COUNT(bug_status.
               )
 
 # 6. Time during which the bug was open
-# OPEN_TIME = ('SELECT reports.bug_id, minmax.min, minmax.max, (minmax.max - minmax.min) AS difference FROM ('
-#              'SELECT'
-#              'bug_id,'
-#              'MIN(timestamp) AS min,'
-#              'MAX(timestamp) AS max'
-#              'FROM resolution'
-#              'GROUP BY bug_id'
-#              'ORDER BY bug_id, timestamp'
-#              ') AS minmax INNER JOIN reports ON minmax.bug_id = reports.bug_id'
-#              'WHERE reports.current_status IN ("CLOSED")'
-#              )
-
-OPEN_TIME = ('SELECT (minmax.max - minmax.min) AS duration, "success" AS result, reports.bug_id '
+OPEN_TIME = ('SELECT (minmax.max - minmax.min) AS duration, reports.bug_id '
              'FROM (SELECT bug_id, MIN(timestamp) AS min, MAX(timestamp) AS max '
              'FROM resolution '
              'GROUP BY bug_id '
@@ -339,11 +327,6 @@ OPEN_TIME = ('SELECT (minmax.max - minmax.min) AS duration, "success" AS result,
              )
 
 # 7. Software module to which bug was assigned to
-# SOFTWARE_MODULE = ('SELECT reports.bug_id, components.what FROM components'
-#                    'INNER JOIN reports ON components.bug_id = reports.bug_id'
-#                    'WHERE reports.current_status = "CLOSED"'
-#                    'ORDER BY reports.bug_id'
-#                    )
 SOFTWARE_MODULE = ('SELECT result.successRate, rep.bug_id '
                    'FROM ( SELECT reports.bug_id, components.what AS what '
                    'FROM components '
@@ -396,7 +379,7 @@ SOFTWARE_MODULE = ('SELECT result.successRate, rep.bug_id '
                    'current_status == "CLOSED" AND reports.current_resolution == "WORKSFORME" OR '
                    'current_status == "CLOSED" AND reports.current_resolution == "FIXED" '
                    'GROUP BY components.what '
-                   ')  AS success ON success.what=fail.what) AS res) result ON rep.what=result.what; '
+                   ') AS success ON success.what=fail.what) AS res) result ON rep.what=result.what; '
                    )
 
 # 8. relationship between reporter and users in cc
@@ -565,7 +548,7 @@ BUGNATURE = ('SELECT s.successRate, r.bug_id '
              'WHERE short_desc.what LIKE "%environment%" '
              'UNION '
              'SELECT bug_id,  "network" AS category '
-             'FROM short_desc'
+             'FROM short_desc '
              'WHERE short_desc.what LIKE "%network%") AS cat ON reports.bug_id=cat.bug_id '
              'WHERE current_status == "RESOLVED" AND reports.current_resolution == "WONTFIX" OR '
              'current_status == "RESOLVED" AND reports.current_resolution == "INVALID" OR '
@@ -586,8 +569,8 @@ BUGNATURE = ('SELECT s.successRate, r.bug_id '
              'WHERE short_desc.what LIKE "%environment%" '
              'UNION '
              'SELECT bug_id,  "network" AS category '
-             'FROM short_desc'
-             'WHERE short_desc.what LIKE "%network%") AS cat ON reports.bug_id=cat.bug_id
+             'FROM short_desc '
+             'WHERE short_desc.what LIKE "%network%") AS cat ON reports.bug_id=cat.bug_id '
              'WHERE current_status == "RESOLVED" AND reports.current_resolution == "WORKSFORME" OR '
              'current_status == "RESOLVED" AND reports.current_resolution == "FIXED" OR '
              'current_status == "VERIFIED" AND reports.current_resolution == "FIXED" OR '

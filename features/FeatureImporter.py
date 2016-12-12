@@ -28,6 +28,38 @@ class FeatureImporter(SqLiteConnector.SqLiteConnector):
         rows = self._fetch_many(featureQueries.REPUTATION_RATE)
         self._insert_many('UPDATE %s SET feature_2 = ? WHERE bug_id = ?' % table, rows)
 
+    def generate_and_import_feature_3(self, table):
+        rows = self._fetch_many(featureQueries.REPORTER_ASSIGNEE_RATE)
+        self._insert_many('UPDATE %s SET feature_3 = ? WHERE bug_id = ?' % table, rows)
+
+    def generate_and_import_feature_4(self, table):
+        rows = self._fetch_many(featureQueries.REASSINGMENTS)
+        self._insert_many('UPDATE %s SET feature_4 = ? WHERE bug_id = ?' % table, rows)
+
+    def generate_and_import_feature_5(self, table):
+        rows = self._fetch_many(featureQueries.REOPENINGS)
+        self._insert_many('UPDATE %s SET feature_5 = ? WHERE bug_id = ?' % table, rows)
+
+    def generate_and_import_feature_6(self, table):
+        rows = self._fetch_many(featureQueries.OPEN_TIME)
+        self._insert_many('UPDATE %s SET feature_6 = ? WHERE bug_id = ?' % table, rows)
+
+    def generate_and_import_feature_7(self, table):
+        rows = self._fetch_many(featureQueries.SOFTWARE_MODULE)
+        self._insert_many('UPDATE %s SET feature_7 = ? WHERE bug_id = ?' % table, rows)
+
+    def generate_and_import_feature_8(self, table):
+        rows = self._fetch_many(featureQueries.RELATIONSHIP)
+        self._insert_many('UPDATE %s SET feature_8 = ? WHERE bug_id = ?' % table, rows)
+
+    def generate_and_import_feature_9(self, table):
+        rows = self._fetch_many(featureQueries.SOFTWARE_VERSION)
+        self._insert_many('UPDATE %s SET feature_9 = ? WHERE bug_id = ?' % table, rows)
+
+    def generate_and_import_feature_10(self, table):
+        rows = self._fetch_many(featureQueries.BUGNATURE)
+        self._insert_many('UPDATE %s SET feature_10 = ? WHERE bug_id = ?' % table, rows)
+
     def _fetch_many(self, query):
         if self._connection is None:
             raise Exception("Open database connection first")

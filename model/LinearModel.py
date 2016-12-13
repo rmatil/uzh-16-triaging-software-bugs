@@ -91,3 +91,24 @@ class LogisticRegression(LinModel):
         predictions = [1 if x > 0.5 else 0 for x in predictions]
 
         return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions)
+
+class BayesianRegression(LinModel):
+    """Bayesian regression"""
+
+    def __init__(self, X_train, y_train, X_test, y_test):
+        super().__init__(X_train, y_train, X_test, y_test)
+
+    def evaluate(self, **kwargs):
+        # Flatten matrix of size (n samples, 1) to an array of size (n samples,)
+        self._y_train = np.ravel(self._y_train)
+        self._y_test = np.ravel(self._y_test)
+
+        reg = linear_model.BayesianRidge()
+        reg.fit(self._X_train, self._y_train)
+
+        predictions = reg.predict(self._X_test)
+
+        # assume that everything which was predicted with p > 0.5 is positive
+        predictions = [1 if x > 0.5 else 0 for x in predictions]
+
+        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions)

@@ -1,8 +1,8 @@
 import os.path as path
 
-from setup import Sampler
 from model import LinearModel
 from model import NeuralNet
+from setup import Sampler
 
 database = "../resources/database/bug_reports.db"
 database = path.abspath(database)
@@ -26,6 +26,11 @@ print('Achieved accuracy of %s and f1 score of %s' % (accuracy, f1_score))
 
 print('Using logistic regression to evaluate...')
 regression = LinearModel.LogisticRegression(X_train, y_train, X_test, y_test)
+accuracy, f1_score = regression.evaluate(penalty='l1')
+print('Achieved accuracy of %s and f1 score of %s' % (accuracy, f1_score))
+
+print('Using bayesian ridge regression to evaluate...')
+regression = LinearModel.BayesianRegression(X_train, y_train, X_test, y_test)
 accuracy, f1_score = regression.evaluate(penalty='l1')
 print('Achieved accuracy of %s and f1 score of %s' % (accuracy, f1_score))
 

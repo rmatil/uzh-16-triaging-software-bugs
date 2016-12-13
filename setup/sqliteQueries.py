@@ -136,3 +136,5 @@ CREATE_FEATURES = ('CREATE TABLE features('
                    'feature_10 REAL,'
                    'FOREIGN KEY (bug_id) REFERENCES reports(bug_id))'
                    )
+
+FIND_SAMPLE_BUGS = ('SELECT bug_id FROM features WHERE feature_1 NOT NULL AND feature_2 NOT NULL AND feature_3 NOT NULL AND feature_4 NOT NULL AND feature_5 NOT NULL AND feature_6 NOT NULL AND feature_7 NOT NULL AND feature_8 NOT NULL AND feature_9 NOT NULL;')

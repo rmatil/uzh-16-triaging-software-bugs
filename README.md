@@ -36,3 +36,8 @@ In order to apply the models to the different features, run [`run_models.py`](ht
 You get as output the accuracy as well as the f1 score for each model on the test data.
 
 Interpreting the prediction results: `1` represents, that a bug was fixed, `0` that it will not be fixed
+
+## Results
+The following image represents a ROC curve over the used models
+
+![ROC curves for different models](/resources/output/roc_curves.png?raw=true)

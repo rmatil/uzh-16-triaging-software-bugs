@@ -2,6 +2,7 @@ import os.path as path
 
 from model import LinearModel
 from model import NeuralNet
+from model import TreeModel
 from setup import Sampler
 
 database = "../resources/database/bug_reports.db"
@@ -32,6 +33,11 @@ print('Achieved accuracy of %s and f1 score of %s' % (accuracy, f1_score))
 print('Using bayesian ridge regression to evaluate...')
 regression = LinearModel.BayesianRegression(X_train, y_train, X_test, y_test)
 accuracy, f1_score = regression.evaluate(penalty='l1')
+print('Achieved accuracy of %s and f1 score of %s' % (accuracy, f1_score))
+
+print('Using decision tree to evaluate...')
+tree = TreeModel.DecisionTree(X_train, y_train, X_test, y_test)
+accuracy, f1_score = tree.evaluate(create_image=True)
 print('Achieved accuracy of %s and f1 score of %s' % (accuracy, f1_score))
 
 print('Using neural net to evaluate...')

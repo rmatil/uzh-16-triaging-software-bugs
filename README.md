@@ -1,5 +1,5 @@
 # uzh-16-triaging-software-bugs
-The final project in the course Business Analytics at UZH
+The final project in the course Business Analytics at UZH: Classifying whether a bug should be fixed based on the [MSR 2013 dataset](https://github.com/ansymo/msr2013-bug_dataset)
 
 ## Installation
 *Note*, that for cloning this repo, Git LFS is recommended in order to download the previously created database
@@ -33,5 +33,6 @@ In case you want to update some features, note the following
 
 ## Models
 In order to apply the models to the different features, run [`run_models.py`](https://github.com/rmatil/uzh-16-triaging-software-bugs/blob/master/model/run_models.py) within the `model` directory.
-You get as output the accuracy as well as the f1 score for each model.
+You get as output the accuracy as well as the f1 score for each model on the test data.
 
+Interpreting the prediction results: `1` represents, that a bug was fixed, `0` that it will not be fixed

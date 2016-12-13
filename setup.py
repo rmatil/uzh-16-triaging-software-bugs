@@ -1,7 +1,6 @@
 import os.path as path
 
 from setup import Cleaner
-from setup import Sampler
 from setup import SqLitePersister
 
 cc_source = "resources/eclipse/cc.csv"
@@ -49,8 +48,3 @@ else:
     print("Connecting to database at %s... " % database)
     persister.connect_db()
     print("Done. \n")
-
-sampler = Sampler.DbSampler(database, 'reports', 'training_set', 'validation_set', 'test_set')
-print("Sampling entire data into 50% training, 25% validation and 25% testing data... ")
-sampler.sample()
-print("Done. \n")

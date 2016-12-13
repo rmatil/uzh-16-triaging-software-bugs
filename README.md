@@ -8,6 +8,7 @@ The final project in the course Business Analytics at UZH: Classifying whether a
 * Python >= 3.5
 * Numpy
 * Pydotplus
+* matplotlib
 * Keras: [keras.io](http://keras.io)
 * Theano: [http://www.deeplearning.net/software/theano/](http://www.deeplearning.net/software/theano/) (If you want to try the neural network approach)
 
@@ -38,6 +39,6 @@ You get as output the accuracy as well as the f1 score for each model on the tes
 Interpreting the prediction results: `1` represents, that a bug was fixed, `0` that it will not be fixed
 
 ## Results
-The following image represents a ROC curve over the used models
+The following image represents ROC curves for the used models
 
 ![ROC curves for different models](/resources/output/roc_curves.png?raw=true)

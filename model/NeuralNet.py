@@ -1,7 +1,7 @@
 from keras.layers import Dense, Activation
 from keras.models import Sequential
 from keras.optimizers import SGD
-
+from sklearn.metrics import f1_score, accuracy_score
 
 class NNModel(object):
     """
@@ -30,7 +30,7 @@ class NNModel(object):
         """
         Evaluates the model
 
-        :return: As first param the accuracy and as second param the f1 score
+        :return: As first param the accuracy, as second param the f1 score and as third the actual predicted values
         """
         raise NotImplementedError('Implement in subclass')
 
@@ -70,9 +70,9 @@ class DeepModel(NNModel):
         model.compile(loss='mean_squared_error', optimizer=SGD(lr=0.01), metrics=['accuracy'])
 
         model.fit(self._X_train, self._y_train, batch_size=50, nb_epoch=5, validation_data=(self._X_validation, self._y_validation))
-        score, acc = model.evaluate(self._X_test, self._y_test, batch_size=50)
+        y_predictions = model.predict(self._X_test, batch_size=50)
 
-        # print an empty line in order to align output of model
-        print()
+        # assume that everything which was predicted with p > 0.5 is positive
+        predictions = [1 if x > 0.5 else 0 for x in y_predictions]
 
-        return acc, score
+        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions), y_predictions

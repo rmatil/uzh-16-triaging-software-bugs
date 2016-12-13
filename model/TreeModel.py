@@ -29,7 +29,7 @@ class TreeModel(object):
         """
         Evaluates the model
 
-        :return: As first param the accuracy and as second param the f1 score
+        :return: As first param the accuracy, as second param the f1 score and as third param the actual predicted values
         """
         raise NotImplementedError('Implement in subclass')
 
@@ -73,9 +73,9 @@ class DecisionTree(TreeModel):
 
             print('[DecisionTree] Done')
 
-        predictions = decision_tree.predict(self._X_test)
+        y_predictions = decision_tree.predict(self._X_test)
 
         # assume that everything which was predicted with p > 0.5 is positive
-        predictions = [1 if x > 0.5 else 0 for x in predictions]
+        predictions = [1 if x > 0.5 else 0 for x in y_predictions]
 
-        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions)
+        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions), y_predictions

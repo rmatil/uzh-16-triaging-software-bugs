@@ -26,7 +26,7 @@ class LinModel(object):
         """
         Evaluates the model
 
-        :return: As first param the accuracy and as second param the f1 score
+        :return: As first param the accuracy, as second param the f1 score and as third param the actual predicted values
         """
         raise NotImplementedError('Implement in subclass')
 
@@ -51,12 +51,12 @@ class LinRegression(LinModel):
         reg = linear_model.LinearRegression()
         reg.fit(self._X_train, self._y_train)
 
-        predictions = reg.predict(self._X_test)
+        y_predictions = reg.predict(self._X_test)
 
         # assume that everything which was predicted with p > 0.5 is positive
-        predictions = [1 if x > 0.5 else 0 for x in predictions]
+        predictions = [1 if x > 0.5 else 0 for x in y_predictions]
 
-        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions)
+        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions), y_predictions
 
 
 class LassoRegression(LinModel):
@@ -81,12 +81,12 @@ class LassoRegression(LinModel):
         reg = linear_model.Lasso(alpha=alpha)
         reg.fit(self._X_train, self._y_train)
 
-        predictions = reg.predict(self._X_test)
+        y_predictions = reg.predict(self._X_test)
 
         # assume that everything which was predicted with p > 0.5 is positive
-        predictions = [1 if x > 0.5 else 0 for x in predictions]
+        predictions = [1 if x > 0.5 else 0 for x in y_predictions]
 
-        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions)
+        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions), y_predictions
 
 
 class LogisticRegression(LinModel):
@@ -115,12 +115,12 @@ class LogisticRegression(LinModel):
         reg = linear_model.LogisticRegression(penalty=penalty)
         reg.fit(self._X_train, self._y_train)
 
-        predictions = reg.predict(self._X_test)
+        y_predictions = reg.predict(self._X_test)
 
         # assume that everything which was predicted with p > 0.5 is positive
-        predictions = [1 if x > 0.5 else 0 for x in predictions]
+        predictions = [1 if x > 0.5 else 0 for x in y_predictions]
 
-        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions)
+        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions), y_predictions
 
 
 class BayesianRegression(LinModel):
@@ -147,9 +147,9 @@ class BayesianRegression(LinModel):
         reg = linear_model.BayesianRidge()
         reg.fit(self._X_train, self._y_train)
 
-        predictions = reg.predict(self._X_test)
+        y_predictions = reg.predict(self._X_test)
 
         # assume that everything which was predicted with p > 0.5 is positive
-        predictions = [1 if x > 0.5 else 0 for x in predictions]
+        predictions = [1 if x > 0.5 else 0 for x in y_predictions]
 
-        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions)
+        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions), y_predictions

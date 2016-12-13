@@ -1,5 +1,6 @@
 from keras.layers import Dense, Activation
 from keras.models import Sequential
+from keras.optimizers import SGD
 
 
 class NNModel(object):
@@ -35,19 +36,27 @@ class DeepModel(NNModel):
     def __init__(self, X_train, y_train, X_validation, y_validation, X_test, y_test):
         super().__init__(X_train, y_train, X_validation, y_validation, X_test, y_test)
 
+        # do not use all features
+        # self._X_train = self._X_train[:, [0, 1, 2, 3]]
+        # self._X_validation = self._X_validation[:, [0, 1, 2, 3]]
+        # self._X_test = self._X_test[:, [0, 1, 2, 3]]
+        #
+        # print(self._X_train[0])
+        # print(len(self._X_train), len(self._X_validation), len(self._X_test))
+
     def evaluate(self):
         model = Sequential()
-        model.add(Dense(5, input_dim=self._X_train.shape[1]))
-        model.add(Activation('sigmoid'))
+        model.add(Dense(9, input_dim=self._X_train.shape[1]))
+        model.add(Activation('linear'))
         model.add(Dense(1))
         model.add(Activation('sigmoid'))
 
-        model.compile(loss='binary_crossentropy', optimizer='sgd', metrics=['accuracy'])
+        model.compile(loss='mean_squared_error', optimizer=SGD(lr=0.01), metrics=['accuracy'])
 
-        model.fit(self._X_train, self._y_train, batch_size=50, nb_epoch=9, validation_data=(self._X_validation, self._y_validation))
+        model.fit(self._X_train, self._y_train, batch_size=50, nb_epoch=5, validation_data=(self._X_validation, self._y_validation))
         score, acc = model.evaluate(self._X_test, self._y_test, batch_size=50)
 
-        # print an empty line
+        # print an empty line in order to align output of model
         print()
 
         return acc, score

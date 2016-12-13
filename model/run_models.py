@@ -1,14 +1,12 @@
 import os.path as path
 
+from matplotlib import pyplot as plt
+from sklearn.metrics import roc_curve
+
 from model import LinearModel
 from model import NeuralNet
 from model import TreeModel
 from setup import Sampler
-
-from matplotlib import pyplot as plt
-from sklearn.metrics import roc_curve
-
-import numpy as np
 
 # Predict results using different models
 
@@ -52,7 +50,13 @@ nn = NeuralNet.DeepModel(X_train, y_train, X_validation, y_validation, X_test, y
 accuracy, f1_score, nn_y_predictions = nn.evaluate()
 print('Achieved accuracy of %s and f1 score of %s' % (accuracy, f1_score))
 
+print('Using optimized neural net to evaluate...')
+opt_nn = NeuralNet.OptimizedDeepModel(db_name=database)
+accuracy, f1_score, optimized_nn_y_predictions = opt_nn.evaluate()
+print('Achieved accuracy of %s and f1 score of %s' % (accuracy, f1_score))
 
+
+# Create ROC figure
 plt.figure(dpi=600, figsize=(8, 5))
 linewidth = 1
 
@@ -73,6 +77,10 @@ plt.plot(fpr, tpr, lw=linewidth, label='decision tree')
 
 fpr, tpr, thresholds = roc_curve(y_test, nn_y_predictions)
 plt.plot(fpr, tpr, lw=linewidth, label='neural net')
+
+opt_nn_X_test, opt_nn_y_test = opt_nn.getTestData()
+fpr, tpr, thresholds = roc_curve(opt_nn_y_test, optimized_nn_y_predictions)
+plt.plot(fpr, tpr, lw=linewidth, label='optimized neural net')
 
 plt.plot([0, 1], [0, 1], color='navy', lw=linewidth, linestyle='--')
 plt.xlim([0.0, 1.0])

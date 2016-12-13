@@ -15,7 +15,7 @@ The final project in the course Business Analytics at UZH
 The project is already set up in so that you can run the different approaches out of the box. 
 In case you want to update some features, note the following
 * Run [`setup.py`](https://github.com/rmatil/uzh-16-triaging-software-bugs/blob/master/setup/setup.py) in the `setup` directory in order to create a database storing the features as well as the bug data
-* Run [`extract_features.py](https://github.com/rmatil/uzh-16-triaging-software-bugs/blob/master/setup/extract_features.py) in the `setup` directory in order to extract the features from the bug data. *NOTE*, that this will consume a lot of time (expect some hours)
+* Run [`extract_features.py`](https://github.com/rmatil/uzh-16-triaging-software-bugs/blob/master/setup/extract_features.py) in the `setup` directory in order to extract the features from the bug data. *NOTE*, that this will consume a lot of time (expect some hours)
 * Run [`sample.py`](https://github.com/rmatil/uzh-16-triaging-software-bugs/blob/master/setup/sample.py) in the `setup` directory in order to create shuffled data for training, validation and testing
 
 ## Features

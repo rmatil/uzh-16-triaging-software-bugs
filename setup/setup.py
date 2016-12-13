@@ -3,9 +3,9 @@ import os.path as path
 from setup import Cleaner
 from setup import SqLitePersister
 
-cc_source = "resources/eclipse/cc.csv"
-cc_target = "resources/eclipse/cc_cleaned.csv"
-database = "resources/database/bug_reports.db"
+cc_source = "../resources/eclipse/cc.csv"
+cc_target = "../resources/eclipse/cc_cleaned.csv"
+database = "../resources/database/bug_reports.db"
 
 # create absolute paths
 cc_source = path.abspath(cc_source)

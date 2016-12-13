@@ -2,7 +2,7 @@ import os.path as path
 
 from features import FeatureImporter
 
-database = "resources/database/bug_reports.db"
+database = "../resources/database/bug_reports.db"
 database = path.abspath(database)
 
 feature_table = 'features'

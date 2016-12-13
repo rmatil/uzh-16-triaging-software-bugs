@@ -1,5 +1,5 @@
-from setup import SqLiteConnector
 from features import featureQueries
+from setup import SqLiteConnector
 
 
 class FeatureImporter(SqLiteConnector.SqLiteConnector):

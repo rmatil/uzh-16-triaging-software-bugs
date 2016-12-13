@@ -4,18 +4,21 @@ from keras.optimizers import SGD
 
 
 class NNModel(object):
-    """Base class for neural net models"""
+    """
+        Base class for neural net models
 
-    def __init__(self, X_train, y_train, X_validation, y_validation, X_test, y_test):
-        """
         Initializes the neural net model with data. Note, that the training data samples and labels
         have to be of the same length. Same also for test data
 
         :param X_train: A matrix of the form [n samples, n features]
         :param y_train: A vector containing the labels for the training data
+        :param X_validation: A matrix of the form [n samples, n features]
+        :param y_validation: A vector containing the labels for the validation data
         :param X_test: A matrix of the form [n samples, n features]
         :param y_test: A vector containing the labels for the test data
-        """
+    """
+
+    def __init__(self, X_train, y_train, X_validation, y_validation, X_test, y_test):
         self._X_train = X_train
         self._y_train = y_train
         self._X_validation = X_validation
@@ -33,6 +36,19 @@ class NNModel(object):
 
 
 class DeepModel(NNModel):
+    """
+        Uses a neural net with two layers in order to predict values
+
+        Initializes the neural net model with data. Note, that the training data samples and labels
+        have to be of the same length. Same also for test data
+
+        :param X_train: A matrix of the form [n samples, n features]
+        :param y_train: A vector containing the labels for the training data
+        :param X_validation: A matrix of the form [n samples, n features]
+        :param y_validation: A vector containing the labels for the validation data
+        :param X_test: A matrix of the form [n samples, n features]
+        :param y_test: A vector containing the labels for the test data
+    """
     def __init__(self, X_train, y_train, X_validation, y_validation, X_test, y_test):
         super().__init__(X_train, y_train, X_validation, y_validation, X_test, y_test)
 

@@ -1,4 +1,4 @@
-# 1. success-rate
+# Success Rate of a bug assignee
 SUCCESS_RATE = ('SELECT '
                 'success_count * 1.0 / (success_count + failed_count) AS success_rate, '
                 'reports.bug_id '
@@ -71,8 +71,7 @@ SUCCESS_RATE = ('SELECT '
                 ') INNER JOIN reports ON reports.reporter = who '
                 'ORDER BY reports.bug_id;')
 
-# 2. reputation-rate
-
+# 2. Success Rate of a bug reporter
 REPUTATION_RATE = (
     'SELECT '
     '(nr_closed * 1.0 / (nr_closed + nr_failed)) AS reputationRate, '
@@ -152,9 +151,7 @@ REPUTATION_RATE = (
     'ORDER BY reports.bug_id'
 )
 
-# 3. ratio between success and reporter-assignee pair
-# ratio of success of a bug report for every reporter-assignee pair
-
+# 3. Success Ratio of a bug report for every reporter-assignee pair
 REPORTER_ASSIGNEE_RATE = ('SELECT '
                           '(nr_closed * 1.0 / (nr_closed + nr_failed)) AS reputationRate, '
                           'reports.bug_id '
@@ -231,8 +228,7 @@ REPORTER_ASSIGNEE_RATE = ('SELECT '
                           ') INNER JOIN reports ON reports.reporter = who '
                           'ORDER BY reports.bug_id')
 
-# 4.  What impact do bug reassignments have on the likelihood of a bug being fixed?
-# list with nr of bugs which were successful and assignments for each reassingments
+# 4. Success Ratio of a bug in terms of how many times it got reassigned
 REASSINGMENTS = ('SELECT '
                  'bugSuccessRate, '
                  'bug_id '
@@ -291,7 +287,7 @@ REASSINGMENTS = ('SELECT '
                  'GROUP BY fail.nr_assignments) f1 ON s1.nr_assignments = f1.nr_assignments '
                  ') ON nr_assignments = nrOfAssignmentsPerBug.reassignments')
 
-# 5. Number of reopenings per bug
+# 5. Number of reassignments of a bug
 REOPENINGS = ('SELECT '
               'ifnull(count, 0), '
               'reports.bug_id '
@@ -307,7 +303,7 @@ REOPENINGS = ('SELECT '
               'ORDER BY reports.bug_id;'
               )
 
-# 6. Time during which the bug was open
+# 6. The duration in seconds of how long a bug was opened
 OPEN_TIME = ('SELECT (minmax.max - minmax.min) AS duration, reports.bug_id '
              'FROM (SELECT bug_id, MIN(timestamp) AS min, MAX(timestamp) AS max '
              'FROM resolution '
@@ -334,7 +330,7 @@ OPEN_TIME = ('SELECT (minmax.max - minmax.min) AS duration, reports.bug_id '
              'current_status == "VERIFIED" AND reports.current_resolution == "INVALID" '
              )
 
-# 7. Software module to which bug was assigned to
+# 7. Success Ratio of the component to which the bug was assigned
 SOFTWARE_MODULE = ('SELECT result.successRate, rep.bug_id '
                    'FROM ( SELECT reports.bug_id, components.what AS what '
                    'FROM components '
@@ -390,7 +386,7 @@ SOFTWARE_MODULE = ('SELECT result.successRate, rep.bug_id '
                    ') AS success ON success.what=fail.what) AS res) result ON rep.what=result.what; '
                    )
 
-# 8. relationship between reporter and users in cc
+# 8. Success Ratio of a bug considering the reporter and all names on the CC
 RELATIONSHIP = ('SELECT suc.sucessRate, rcc.bug_id '
                 'FROM (SELECT reporter, what, reports.bug_id '
                 'FROM cc '
@@ -443,8 +439,7 @@ RELATIONSHIP = ('SELECT suc.sucessRate, rcc.bug_id '
                 'ON rcc.reporter=suc.reporter AND rcc.what=suc.what; '
                 )
 
-# 9. relation of software version  and bug fix
-# no UNION had multiple times same bug_id
+# 9. Success Ratio of the version to which the bug was assigned
 SOFTWARE_VERSION = ('SELECT rate.bugSuccessRatePerVersion, bugList.bug_id '
                     'FROM (SELECT reports.bug_id AS bug_id, product.what AS prod, version.what AS v_nr '
                     'FROM reports '
@@ -484,8 +479,7 @@ SOFTWARE_VERSION = ('SELECT rate.bugSuccessRatePerVersion, bugList.bug_id '
                     'ON bugList.prod=rate.prod AND bugList.v_nr=rate.v_nr; '
                     )
 
-# 10. calculates the influence of a bug relation to user interface, environment and network.
-
+# 10. Success Ratio of a bug depending whether it is classified as user interface, environment or network related
 BUGNATURE = ('SELECT s.successRate, r.bug_id '
              'FROM ( SELECT * '
              'FROM reports '

@@ -2,6 +2,10 @@ import os.path as path
 
 from features import FeatureImporter
 
+
+# Extract features from the bug data
+# Make sure, you have ran setup.py before
+
 database = "../resources/database/bug_reports.db"
 database = path.abspath(database)
 

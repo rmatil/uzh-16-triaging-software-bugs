@@ -5,6 +5,8 @@ from model import NeuralNet
 from model import TreeModel
 from setup import Sampler
 
+# Predict results using different models
+
 database = "../resources/database/bug_reports.db"
 database = path.abspath(database)
 

@@ -1,14 +1,12 @@
+import numpy as np
 from sklearn import linear_model
 from sklearn.metrics import f1_score, accuracy_score
 
-import numpy as np
-
 
 class LinModel(object):
-    """Base class for linear models"""
+    """
+        Base class for linear models
 
-    def __init__(self, X_train, y_train, X_test, y_test):
-        """
         Initializes the linear model with data. Note, that the training data samples and labels
         have to be of the same length. Same also for test data
 
@@ -16,7 +14,9 @@ class LinModel(object):
         :param y_train: A vector containing the labels for the training data
         :param X_test: A matrix of the form [n samples, n features]
         :param y_test: A vector containing the labels for the test data
-        """
+    """
+
+    def __init__(self, X_train, y_train, X_test, y_test):
         self._X_train = X_train
         self._y_train = y_train
         self._X_test = X_test
@@ -32,7 +32,17 @@ class LinModel(object):
 
 
 class LinRegression(LinModel):
-    """Linear regression"""
+    """
+        Linear regressio
+
+        Initializes the linear model with data. Note, that the training data samples and labels
+        have to be of the same length. Same also for test data
+
+        :param X_train: A matrix of the form [n samples, n features]
+        :param y_train: A vector containing the labels for the training data
+        :param X_test: A matrix of the form [n samples, n features]
+        :param y_test: A vector containing the labels for the test data
+    """
 
     def __init__(self, X_train, y_train, X_test, y_test):
         super().__init__(X_train, y_train, X_test, y_test)
@@ -50,7 +60,17 @@ class LinRegression(LinModel):
 
 
 class LassoRegression(LinModel):
-    """Lasso regression"""
+    """
+        Lasso regression
+
+        Initializes the linear model with data. Note, that the training data samples and labels
+        have to be of the same length. Same also for test data
+
+        :param X_train: A matrix of the form [n samples, n features]
+        :param y_train: A vector containing the labels for the training data
+        :param X_test: A matrix of the form [n samples, n features]
+        :param y_test: A vector containing the labels for the test data
+    """
 
     def __init__(self, X_train, y_train, X_test, y_test):
         super().__init__(X_train, y_train, X_test, y_test)
@@ -70,7 +90,17 @@ class LassoRegression(LinModel):
 
 
 class LogisticRegression(LinModel):
-    """Logistic regression"""
+    """
+        Logistic regression
+
+        Initializes the linear model with data. Note, that the training data samples and labels
+        have to be of the same length. Same also for test data
+
+        :param X_train: A matrix of the form [n samples, n features]
+        :param y_train: A vector containing the labels for the training data
+        :param X_test: A matrix of the form [n samples, n features]
+        :param y_test: A vector containing the labels for the test data
+    """
 
     def __init__(self, X_train, y_train, X_test, y_test):
         super().__init__(X_train, y_train, X_test, y_test)
@@ -92,8 +122,19 @@ class LogisticRegression(LinModel):
 
         return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions)
 
+
 class BayesianRegression(LinModel):
-    """Bayesian regression"""
+    """
+        Bayesian regression
+
+        Initializes the linear model with data. Note, that the training data samples and labels
+        have to be of the same length. Same also for test data
+
+        :param X_train: A matrix of the form [n samples, n features]
+        :param y_train: A vector containing the labels for the training data
+        :param X_test: A matrix of the form [n samples, n features]
+        :param y_test: A vector containing the labels for the test data
+    """
 
     def __init__(self, X_train, y_train, X_test, y_test):
         super().__init__(X_train, y_train, X_test, y_test)

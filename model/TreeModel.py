@@ -1,14 +1,15 @@
-from sklearn import tree
-from sklearn.metrics import f1_score, accuracy_score
-import numpy as np
-import pydotplus
 import os.path as path
 
-class TreeModel(object):
-    """Base class for linear models"""
+import numpy as np
+import pydotplus
+from sklearn import tree
+from sklearn.metrics import f1_score, accuracy_score
 
-    def __init__(self, X_train, y_train, X_test, y_test):
-        """
+
+class TreeModel(object):
+    """
+        Base class for decision trees
+
         Initializes the linear model with data. Note, that the training data samples and labels
         have to be of the same length. Same also for test data
 
@@ -16,7 +17,9 @@ class TreeModel(object):
         :param y_train: A vector containing the labels for the training data
         :param X_test: A matrix of the form [n samples, n features]
         :param y_test: A vector containing the labels for the test data
-        """
+    """
+
+    def __init__(self, X_train, y_train, X_test, y_test):
         self._X_train = X_train
         self._y_train = y_train
         self._X_test = X_test
@@ -32,6 +35,17 @@ class TreeModel(object):
 
 
 class DecisionTree(TreeModel):
+    """
+        Decision tree
+
+        Initializes the linear model with data. Note, that the training data samples and labels
+        have to be of the same length. Same also for test data
+
+        :param X_train: A matrix of the form [n samples, n features]
+        :param y_train: A vector containing the labels for the training data
+        :param X_test: A matrix of the form [n samples, n features]
+        :param y_test: A vector containing the labels for the test data
+    """
     def __init__(self, X_train, y_train, X_test, y_test):
         super().__init__(X_train, y_train, X_test, y_test)
 

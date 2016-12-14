@@ -36,9 +36,12 @@ In case you want to update some features, note the following
 In order to apply the models to the different features, run [`run_models.py`](https://github.com/rmatil/uzh-16-triaging-software-bugs/blob/master/model/run_models.py) within the `model` directory.
 You get as output the accuracy as well as the f1 score for each model on the test data.
 
-Interpreting the prediction results: `1` represents, that a bug was fixed, `0` that it will not be fixed
+Interpreting the prediction results: `1` represents, that a bug was fixed (i.e. successfully closed), `0` that it will not be fixed
 
 ## Results
-The following image represents ROC curves for the used models
 
 ![ROC curves for different models](/resources/output/roc_curves.png?raw=true)
+![Cross Validation Scores on linear models](/resources/output/cross_validation_scores.png?raw=true)
+
+## Predictions on Hold-out dataset
+Predicitions made by our best classifier are written to [`predictions.csv`](https://github.com/rmatil/uzh-16-triaging-software-bugs/blob/master/resources/output/predictions.csv). As first column you get the Bug ID, as second column the indicator whether a bug is predicted as successfully closed. 

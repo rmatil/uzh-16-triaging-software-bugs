@@ -104,7 +104,7 @@ plt.plot(bay_reg_cv_score, lw=linewidth, label='bayesian ridge regression')
 plt.plot(dec_tree_cv_score, lw=linewidth, label='decision tree')
 
 plt.xlim([0, cross_validation_k + 1])
-plt.ylim([0, 2])
+plt.ylim([0, 1.05])
 plt.xlabel('k')
 plt.ylabel('Score')
 plt.title('K-Fold Cross Validation Score for k=%s' % cross_validation_k)

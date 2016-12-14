@@ -79,6 +79,14 @@ class DbSampler(SqLiteConnector.SqLiteConnector):
     def getTestData(self):
         return self._getSampledData(self._test_table)
 
+    def getTestBugIds(self):
+        super().connect_db()
+        cursor = self._connection.cursor()
+
+        cursor.execute('SELECT bug_id FROM (SELECT data.bug_id, feature_1, feature_2, feature_3, feature_4, feature_5, feature_6, feature_7, feature_8, feature_9, 1 AS success FROM (SELECT * FROM reports INNER JOIN %s t ON t.bug_id = reports.bug_id INNER JOIN features ON features.bug_id = reports.bug_id) AS data WHERE ( current_status == "RESOLVED" AND data.current_resolution == "WORKSFORME" OR current_status == "RESOLVED" AND data.current_resolution == "FIXED" OR current_status== "VERIFIED" AND data.current_resolution == "FIXED" OR current_status == "CLOSED" AND data.current_resolution == "WORKSFORME" OR current_status == "CLOSED" AND data.current_resolution == "FIXED") UNION SELECT data.bug_id, feature_1, feature_2, feature_3, feature_4, feature_5, feature_6, feature_7, feature_8, feature_9, 0 AS success FROM (SELECT * FROM reports INNER JOIN training_set t ON t.bug_id = reports.bug_id INNER JOIN features ON features.bug_id = reports.bug_id ) AS data WHERE feature_1 NOT NULL AND feature_2 NOT NULL AND feature_3 NOT NULL AND feature_4 NOT NULL AND ( data.current_status == "RESOLVED" AND data.current_resolution == "WONTFIX" OR data.current_status == "RESOLVED" AND data.current_resolution == "INVALID" OR data.current_status == "CLOSED" AND data.current_resolution == "WONTFIX" OR data.current_status == "CLOSED" AND data.current_resolution == "INVALID" OR data.current_status == "VERIFIED" AND data.current_resolution == "WONTFIX" OR data.current_status == "VERIFIED" AND data.current_resolution == "INVALID"))' % self._test_table)
+
+        return cursor.fetchall()
+
     def _getSampledData(self, table):
         super().connect_db()
         cursor = self._connection.cursor()

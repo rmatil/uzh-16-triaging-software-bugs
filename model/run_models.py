@@ -1,4 +1,5 @@
 import os.path as path
+import csv
 
 from matplotlib import pyplot as plt
 from sklearn.metrics import roc_curve
@@ -109,3 +110,20 @@ plt.ylabel('Score')
 plt.title('K-Fold Cross Validation Score for k=%s' % cross_validation_k)
 plt.legend(loc="lower right")
 plt.savefig('../resources/output/cross_validation_scores.png')
+
+# since the decision tree model was the best one
+# use it as final predictor for submission
+
+bug_ids = sampler.getTestBugIds()
+
+
+bug_ids = list([x[0] for x in bug_ids])
+predictions = list([1 if x > 0.5 else 0 for x in dec_tree_y_prediction])
+
+rows = []
+for x in range(0, len(bug_ids)):
+    rows.append((bug_ids[x], predictions[x]))
+
+with open('../resources/output/predictions.csv', 'w') as csvfile:
+    writer = csv.writer(csvfile, delimiter=',')
+    writer.writerows(rows)

@@ -4,6 +4,7 @@ import numpy as np
 import pydotplus
 from sklearn import tree
 from sklearn.metrics import f1_score, accuracy_score
+from sklearn.model_selection import cross_val_predict
 
 
 class TreeModel(object):
@@ -17,13 +18,15 @@ class TreeModel(object):
         :param y_train: A vector containing the labels for the training data
         :param X_test: A matrix of the form [n samples, n features]
         :param y_test: A vector containing the labels for the test data
+        :param cv: Number of k for k-fold cross validation
     """
 
-    def __init__(self, X_train, y_train, X_test, y_test):
+    def __init__(self, X_train, y_train, X_test, y_test, cv):
         self._X_train = X_train
         self._y_train = y_train
         self._X_test = X_test
         self._y_test = y_test
+        self._cv = cv
 
     def evaluate(self):
         """
@@ -45,9 +48,11 @@ class DecisionTree(TreeModel):
         :param y_train: A vector containing the labels for the training data
         :param X_test: A matrix of the form [n samples, n features]
         :param y_test: A vector containing the labels for the test data
+        :param cv: Number of k for k-fold cross validation
     """
-    def __init__(self, X_train, y_train, X_test, y_test):
-        super().__init__(X_train, y_train, X_test, y_test)
+
+    def __init__(self, X_train, y_train, X_test, y_test, cv):
+        super().__init__(X_train, y_train, X_test, y_test, cv)
 
     def evaluate(self, **kwargs):
         """
@@ -61,6 +66,8 @@ class DecisionTree(TreeModel):
 
         decision_tree = tree.DecisionTreeClassifier()
         decision_tree.fit(self._X_train, self._y_train)
+
+        cv_scores = cross_val_predict(decision_tree, self._X_train, self._y_train, cv=self._cv)
 
         # Create a pdf of the decision tree
         if create_image:
@@ -78,4 +85,4 @@ class DecisionTree(TreeModel):
         # assume that everything which was predicted with p > 0.5 is positive
         predictions = [1 if x > 0.5 else 0 for x in y_predictions]
 
-        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions), y_predictions
+        return accuracy_score(self._y_test, predictions), f1_score(self._y_test, predictions), y_predictions, cv_scores
